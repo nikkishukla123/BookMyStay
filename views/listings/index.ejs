@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>listing</title>
+</head>
+<body>list
+    <ul>
+     <% for(list of lists)  { %>  <!-- ⚠️ That missing / causes exactly this error.-->
+          <li><a href="/listings/<%= list.id %>"><%= list.title %></a></li>
+          
+
+        <% } %>
+    </ul>
+    <a href="/listings/new">add new list</a>
+</body>
+</html>
