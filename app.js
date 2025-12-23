@@ -5,13 +5,16 @@ const Listing = require("./models/listing.js")
 const path = require("path");
 require("dotenv").config();
 const methodOverride = require("method-override");//acessing method override
-
+const ejsmate = require("ejs-mate");
 
 app.set("views",path.join(__dirname,"views"));
 app.set("view engine","ejs")
-app.use(express.static(path.join(__dirname,"public")));
+app.use(express.static(path.join(__dirname,"/public")));
 app.use(express.urlencoded({ extended: true })); // Parse form data (POST request data from HTML forms)
 app.use(methodOverride("_method")); // to convert patch requests
+app.engine("ejs",ejsmate);
+
+
 
 main()
   .then((res) => {
@@ -42,7 +45,7 @@ app.get("/listings", async (req,res) => {     //Express route handlers always re
     res.render("listings/index.ejs",{lists});   //Express renders views relative to views/, including subfolders.
 })
 
-// new route
+// new route: add new listing
 app.get("/listings/new", (req,res) => {
  res.render("listings/form.ejs")
 })

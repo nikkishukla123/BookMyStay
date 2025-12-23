@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>listing</title>
-</head>
+<% layout("/layouts/boilerplate") %>
+
+
+
+
 <body>list
     <ul>
      <% for(list of lists)  { %>  <!-- ⚠️ That missing / causes exactly this error.-->
@@ -13,6 +11,5 @@
 
         <% } %>
     </ul>
-    <a href="/listings/new">add new list</a>
+    <!-- <a href="/listings/new">add new list</a> -->
 </body>
-</html>
