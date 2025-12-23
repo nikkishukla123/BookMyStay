@@ -6,6 +6,20 @@
     <title>Document</title>
 </head>
 <body>
-   
+    <h3>edit list</h3>
+    <form method="post" action="/listings/<%= listing.id %>?_method=PUT">
+        <input type="text" name="listing[title]" value="<%= listing.title %>">
+        <br> <br>
+        <textarea name="listing[description]"> <%= listing.description %></textarea> <!-- text area should be like this-->
+        <br> <br>
+        <input type="text" name="listing[image]"placeholder="enter image link">
+        <br> <br>
+        <input type="number" name="listing[price]" value="<%= listing.price %>">
+        <br> <br>
+        <input type="text" name="listing[country]" value="<%= listing.country %>">
+        <br> <br>
+        <input type="text" name="listing[location]" value="<%= listing.location %>">
+  <button>edit</button>
+    </form>
 </body>
 </html>
