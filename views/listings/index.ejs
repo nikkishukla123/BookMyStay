@@ -4,12 +4,28 @@
 
 
 <body>list
-    <ul>
-     <% for(list of lists)  { %>  <!-- ⚠️ That missing / causes exactly this error.-->
-          <li><a href="/listings/<%= list.id %>"><%= list.title %></a></li>
-          
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1"  >
+    <% for(list of lists)  { %> 
+        <a href="/listings/<%= list.id %>" class="listing">  <!-- card in the anchor tag to make clickable-->
 
-        <% } %>
-    </ul>
+        <div class="card col" >
+            <img src="<%= list.image.url%>" class="card-img-top" alt="img" style="height: 20rem;"> <!--dont give object to img src-->
+            <div class="card-img-overlay ">abs </div>
+            <div class="card-body">
+              <p class="card-text">
+                 <b><%= list.title %></b>  <!-- title in bold text-->
+                &#x20B9; <%= list.price.toLocaleString("en-IN") %> /night
+              </p>
+            </div>
+            </div> 
+    
+        
+        
+          <% } %>
+    </a>
+  </div>
+
+
+    
     <!-- <a href="/listings/new">add new list</a> -->
 </body>
