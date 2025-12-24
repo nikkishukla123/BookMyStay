@@ -1,9 +1,15 @@
-body {
-    .poppins-regular {
-        font-family: "plus jakarta Sans", sans-serif !important;
+body {   /*Tumne page ko flex column layout me convert kar diya,
+    aur main content ko expand karke footer ko bottom pe fix kar diya.*/
+    font-family: "plus jakarta Sans", sans-serif !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
       }
-      
-}
+.container {   /*“Body me jo extra vertical space bacha hai,
+    wo .container ko de do.”*/
+    flex: 1;
+}     
+
 .navbar {
     height: 5rem;
     background-color: white;
@@ -72,4 +78,11 @@ card-img-top {
 .card-img-overlay:hover{
     opacity: 0.2;
     background-color: white;
+}
+
+/*show form*/
+.add-btn {
+    background-color: #fe424d !important;
+    border: none !important;
+    columns: white !important;
 }
