@@ -14,9 +14,9 @@ This is a Node.js web application built with Express.js for managing property li
 ## Tech Stack
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB with Mongoose ODM
-- **Templating**: EJS (Embedded JavaScript)
+- **Templating**: EJS (Embedded JavaScript) with ejs-mate for layout support
 - **Middleware**: method-override for PUT/DELETE requests, dotenv for environment variables
-- **Styling**: Basic HTML/CSS (no external CSS framework implemented yet)
+- **Styling**: Bootstrap 5 for responsive design, Font Awesome for icons, custom CSS
 
 ## Project Structure
 ```
@@ -103,6 +103,7 @@ Majorproject/
 - express: ^5.2.1
 - mongoose: ^9.0.2
 - ejs: ^3.1.10
+- ejs-mate: ^4.0.0
 - method-override: ^3.0.0
 - dotenv: ^17.2.3
 
