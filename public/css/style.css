@@ -80,9 +80,23 @@ card-img-top {
     background-color: white;
 }
 
-/*show form*/
-.add-btn {
+/*edit form*/
+.edit-btn {
     background-color: #fe424d !important;
     border: none !important;
     columns: white !important;
+}
+
+/* show page styling*/
+.show-img {
+    height: 30vh;
+}
+.btns {
+    display: flex;
+    gap: 1rem;
+    margin-left: 20rem;
+}
+.show-card{
+    padding-left: 0;
+    padding-right: 0;
 }

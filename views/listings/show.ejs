@@ -1,17 +1,36 @@
 <% layout("/layouts/boilerplate") %>
 <body>
-    <h3>listings details</h3>
-    <ul>
-      <li><%= listing.title %></li> 
-      <li><%= listing.description %></li> 
-      <li> &#x20B9;<%= listing.price.toLocaleString("en-IN") %></li> <!-- so that comma comes for ruppes-->
-      <li><%= listing.location %></li> 
-      <li><%= listing.country %></li> 
-    </ul>
-    <br>
-    <a href="/listings/<%= listing.id %>/edit">edit</a> 
-    <br> <br>
+  <div class="row">
+    <div class="col-8 offset-2">
+
+      <h3>listings details</h3>
+   </div>
+    <div class="card col-6 offset-3 show-card" >
+      
+      <img src="<%= listing.image.url%>" class="card-img-top show-img" alt="image">
+      <div class="card-body">
+        <p class="card-text">
+          <b>  <%= listing.title %> </b> <br>
+          <%= listing.description %> <br>
+          &#x20B9;<%= listing.price.toLocaleString("en-IN") %> <br>
+          <%= listing.location %> <br>
+          <%= listing.country %>
+        </p>
+      </div>
+    </div>
+
+
+   
+  <div class="btns">
+    <a href="/listings/<%= listing.id %>/edit" class="btn btn-dark edit-btn">Edit</a> <!--offset-2  = left se 2 columns khaali
+    offset-4  = left se 4 columns khaali-->
     <form method="post"   action="/listings/<%= listing.id %>?_method=DELETE">
-      <BUtton>delete the list</BUtton>
+      <button class="btn btn-dark ">DELETE</button>  <!-- two column ka space lega or left sa  4 column khali-->
     </form>
+  </div>
+    
+ 
+    
+ 
+</div>
 </body>
