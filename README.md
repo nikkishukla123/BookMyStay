@@ -43,7 +43,7 @@ Majorproject/
 
 2. **Install dependencies**:
    ```
-   npm install
+   npm install : npm init -y, npm i express,npm i mongoose ,npm i ejs
    ```
 
 3. **Set up environment variables**:
