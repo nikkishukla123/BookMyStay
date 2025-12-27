@@ -29,6 +29,27 @@
     </form>
   </div>
     
+  <!--for review form-->
+  <div class="col-8 offset-3">
+    <hr>
+    <h4>WRITE REVIEW</h4>
+    <form method="post" action="/listings/<%= listing.id %>/review">
+     <div class="mb-3 mt-3">
+      <label for="rating" class="form-label">Rating</label>
+      <input type="range" min="1" max="5" id="rating" class="form-range" name="review[rating]"   >
+     </div>
+     <div class="mb-3 mt-3">
+      <label for="comment" class="form-label">comments</label>
+      <textarea 
+      name="review[comment]"
+      id="comment"
+      cols="30"
+      rows="10"
+      class="form-control"></textarea>
+     </div>
+     <button btn btn-outline-dark>submit</button>
+    </form>
+  </div>
  
     
  

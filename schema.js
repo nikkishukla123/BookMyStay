@@ -1,5 +1,5 @@
-const Joi = require("joi");
-
+const Joi = require("joi");  // joi comes between of server and real database as a security
+ 
 module.exports.listingSchema = Joi.object({
   listing: Joi.object({
     title: Joi.string().required(),
@@ -20,4 +20,7 @@ module.exports.listingSchema = Joi.object({
 
 // 🎯 Interview Answer (Perfect)
 
-// “Frontend validation improves user experience but can be bypassed. Mongoose validation runs at database level, which is too late. Joi is used to validate request data before it reaches the database, improving security, performance, and error handling.”
+// “Frontend validation improves user experience but can be bypassed.
+//  Mongoose validation runs at database level, which is too late.
+//  Joi is used to validate request data before it reaches the database, 
+// improving security, performance, and error handling.”

@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const Listing = require("./models/listing.js")
+const Listing = require("./models/listing.js")  // listing schema
+const Review = require("./models/review.js") // reviw schema
 const path = require("path");
 require("dotenv").config();
 const methodOverride = require("method-override");//acessing method override
@@ -57,7 +58,7 @@ const validateListing = (req,res,next)=> {  // making it as a middleware to hand
 
 
 // create: listing all files 
-app.get("/listings",validateListing,wrapAsync(async (req,res) => {     //Express route handlers always receive (req, res) in this order.
+app.get("/listings",wrapAsync(async (req,res) => {     //Express route handlers always receive (req, res) in this order.
     let lists =  await Listing.find();
     res.render("listings/index.ejs",{lists});   //Express renders views relative to views/, including subfolders.
 }))
@@ -70,7 +71,7 @@ app.get("/listings/new", (req,res) => {
 // CREATE ROUTE :MAKE NEW LIST BY SUBMITTING FORM BY POST REQUEST BUT FIRST GET FROM 
 app.post("/listings",validateListing,wrapAsync(async (req,res) => {
   // let {title,description,image,price,country,location} = req.body;
-  const newlisting = new Listing(req.body.listing);  // taking the 
+  const newlisting = new Listing(req.body.listing);  // taking as for name ="listing[title]" is written tho vha sa direct data le lega
   await newlisting.save();  // save hone ke baad redirect kardo
   res.redirect("/listings");
 }) )
@@ -78,15 +79,27 @@ app.post("/listings",validateListing,wrapAsync(async (req,res) => {
 
 
 //show route: read operation: get list show in deatail by id
-app.get("/listings/:id",validateListing, wrapAsync(async (req,res) => {     //Express route handlers always receive (req, res) in this order.
+app.get("/listings/:id", wrapAsync(async (req,res) => {     //Express route handlers always receive (req, res) in this order.
   let {id} = req.params;
   const listing = await Listing.findById(id);
   res.render("listings/show.ejs",{listing}); 
 }) )
 
+//Reviews
+// post route
+app.post("/listings/:id/review",async(req,res) =>{
+let listing = await Listing.findById(req.params.id)  // id find karkar data  listing mein dal do
+const newReview = new Review(req.body.review); // taking as for name ="listing[title]" is written tho vha sa direct data le lega
+
+listing.reviews.push(newReview)  // so that it become refernce for listing ,embedded ralatin
+await newReview.save();
+await listing.save();
+res.redirect(`/listings/${listing._id}`);
+})
+
 
 // edit route
-app.get("/listings/:id/edit",validateListing,wrapAsync(async (req,res) => {
+app.get("/listings/:id/edit",wrapAsync(async (req,res) => {
   let {id} = req.params;
   const listing = await Listing.findById(id);
   res.render("listings/edit.ejs",{listing}); 
@@ -108,7 +121,6 @@ app.delete("/listings/:id" ,validateListing,wrapAsync(async(req,res) =>{
 }))
 
 // middleware
-
 app.use((req, res, next) => {   //  for handling custom express error
   next(new ExpressError(404, "Page Not Found"));
 });
