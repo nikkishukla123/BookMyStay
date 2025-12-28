@@ -1,15 +1,16 @@
 const Joi = require("joi");  // joi comes between of server and real database as a security
- 
-module.exports.listingSchema = Joi.object({  
-  listing: Joi.object({  //
+
+const listingSchema = Joi.object({
+  listing: Joi.object({
     title: Joi.string().required(),
     description: Joi.string().allow(""),
-    price: Joi.number().required().min(0),
+    price: Joi.number().required(),
     country: Joi.string().required(),
     location: Joi.string().required(),
     image: Joi.string().allow("", null)
-  }).required() 
-})
+  }).required()
+});
+
 
 
 module.exports.reviewSchema = Joi.object({  
@@ -21,7 +22,7 @@ module.exports.reviewSchema = Joi.object({
 })
 
                                         
- 
+module.exports.listingSchema = listingSchema;
 // 🧠 Mental Model (Yaad rakhne ka trick)
 // Form Validation   → UX (user help)
 // Joi Validation    → Security + Logic

@@ -1,5 +1,8 @@
+// listing schema is defined here
+
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Review = require("./review");
 // here the schema is set
 const listingSchema = new Schema({
     title :{
@@ -35,6 +38,33 @@ const listingSchema = new Schema({
         },
     ],
 });
+
+// listing ka delete route isko call karega as a middleware
+// listingSchema.post("findOneAndDelete",async(listing) => {  
+//     console.log("🔥 MIDDLEWARE TRIGGERED", listing._id);
+//     if(listing) {// if listing is matched delete review of that listing
+//          await Review.deleteMany({_id:{ $in: listing.reviews}})  
+//     }
+//     console.log("🔥 MIDDLEWARE deleted", listing._id);
+// });
+
+listingSchema.post("findOneAndDelete", async function (listing) {
+    if (!listing) return;
+  
+    if (!listing.reviews || listing.reviews.length === 0) {
+      console.log("No reviews to delete");
+      return;
+    }
+  
+    console.log("🔥 MIDDLEWARE TRIGGERED", listing._id);
+  
+    await Review.deleteMany({
+      _id: { $in: listing.reviews }
+    });
+  
+    console.log("🔥 REVIEWS DELETED");
+  });
+  
 
 const Listing = mongoose.model("Listing",listingSchema);
 

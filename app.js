@@ -47,7 +47,7 @@ async function main() {
 // validate listing
 const validateListing = (req,res,next)=> {  // making it as a middleware to handle server error
   // jab kisi rout ke upar call jaeyga pehle validate listing then bki ka async ka kaam
-  let {error} = listingSchema.validate(req.body.listing);
+  let {error} = listingSchema.validate(req.body);
   console.log(error);
   if (error) {
     const msg = error.details.map(el => el.message).join(",");
@@ -70,10 +70,6 @@ const validateReview = (req,res,next) => {
 }
 
 
-
-
-
-
 // create: listing all files 
 app.get("/listings",wrapAsync(async (req,res) => {     //Express route handlers always receive (req, res) in this order.
     let lists =  await Listing.find();
@@ -85,10 +81,11 @@ app.get("/listings/new", (req,res) => {
  res.render("listings/form.ejs")
 })
 
-// CREATE ROUTE :MAKE NEW LIST BY SUBMITTING FORM BY POST REQUEST BUT FIRST GET FROM 
+// CREATE ROUTE :MAKE NEW LIST BY SUBMITTING FORM BY POST REQUEST BUT FIRST GET FROM
 app.post("/listings",validateListing,wrapAsync(async (req,res) => {
   // let {title,description,image,price,country,location} = req.body;
-  const newlisting = new Listing(req.body.listing);  // taking as for name ="listing[title]" is written tho vha sa direct data le lega
+  const newlisting = new Listing(req.body.listing);
+  // taking as for name ="listing[title]" is written tho vha sa direct data le lega
   await newlisting.save();  // save hone ke baad redirect kardo
   res.redirect("/listings");
 }) )
@@ -115,6 +112,17 @@ await listing.save();
 res.redirect(`/listings/${listing._id}`);
 }) )
 
+// REVIEWS:DELETE ROUTE
+app.delete("/listings/:id/review/:reviewId",wrapAsync(async(req,res) =>{
+  let {id,reviewId} = req.params; // taking both review and listing id as rview must be deleted in listings also
+await Listing.findByIdAndUpdate(id, { //uss review ko pull matlab delete karo jiska id listing id sa mathch hota haisa match karta hai
+  $pull: { reviews: new mongoose.Types.ObjectId(reviewId) } //So we convert string → ObjectId
+});  
+await Review.findByIdAndDelete(reviewId); // then delete that review
+
+res.redirect(`/listings/${id}`); // redirectin to show page again
+}))
+
 
 // edit route
 app.get("/listings/:id/edit",wrapAsync(async (req,res) => {
@@ -131,7 +139,7 @@ app.put("/listings/:id",validateListing,wrapAsync(async (req,res) => {
   res.redirect(`/listings/${id}`);
 }))
 // DELETE ROUTE
-app.delete("/listings/:id" ,validateListing,wrapAsync(async(req,res) =>{
+app.delete("/listings/:id" ,wrapAsync(async(req,res) =>{
   let {id} = req.params;
   let deletedlisting = await Listing.findByIdAndDelete(id)
   console.log("deleted sucessfully",deletedlisting)
