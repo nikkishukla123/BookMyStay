@@ -4,12 +4,13 @@ const mongoose = require("mongoose");
 const Listing = require("./models/listing.js")  // listing schema
 const Review = require("./models/review.js") // reviw schema
 const path = require("path");
-require("dotenv").config();
+require("dotenv").config(); //env
 const methodOverride = require("method-override");//acessing method override
-const ejsmate = require("ejs-mate");
+const ejsmate = require("ejs-mate"); // ejs mate rquired
 const wrapAsync = require("./utils/wrapAsyn.js")  //for wrapasyn for middleware it aotomatically catches the error and passes it to the the middleware
-const ExpressError = require("./utils/ExpressError.js")
+const ExpressError = require("./utils/ExpressError.js") // for custom express error
 const { listingSchema } = require("./schema");  // server joi schema
+const { reviewSchema } = require("./schema"); // review joi required for server side validation
 
 app.set("views",path.join(__dirname,"views"));
 app.set("view engine","ejs")
@@ -43,7 +44,7 @@ async function main() {
 //      console.log("response saved")
 // });
 
-
+// validate listing
 const validateListing = (req,res,next)=> {  // making it as a middleware to handle server error
   // jab kisi rout ke upar call jaeyga pehle validate listing then bki ka async ka kaam
   let {error} = listingSchema.validate(req.body.listing);
@@ -55,6 +56,22 @@ const validateListing = (req,res,next)=> {  // making it as a middleware to hand
     next()
   }
 }
+
+// validate review 
+const validateReview = (req,res,next) => {
+  let {error} = reviewSchema.validate(req.body); // html ke form mein review[comment] aise hai
+  console.log(error);
+  if (error) {
+    const msg = error.details.map(el => el.message).join(",");
+    throw new ExpressError(400, msg);
+  } else {
+    next()
+  }
+}
+
+
+
+
 
 
 // create: listing all files 
@@ -81,21 +98,22 @@ app.post("/listings",validateListing,wrapAsync(async (req,res) => {
 //show route: read operation: get list show in deatail by id
 app.get("/listings/:id", wrapAsync(async (req,res) => {     //Express route handlers always receive (req, res) in this order.
   let {id} = req.params;
-  const listing = await Listing.findById(id);
+  const listing = await Listing.findById(id).populate("reviews");
   res.render("listings/show.ejs",{listing}); 
 }) )
 
 //Reviews
 // post route
-app.post("/listings/:id/review",async(req,res) =>{
+app.post("/listings/:id/review",validateReview,wrapAsync(async(req,res) =>{
 let listing = await Listing.findById(req.params.id)  // id find karkar data  listing mein dal do
-const newReview = new Review(req.body.review); // taking as for name ="listing[title]" is written tho vha sa direct data le lega
+const newReview = new Review(req.body.review); // taking as for name ="listing[title]" is written tho vha sa direct data le lega from html form
 
 listing.reviews.push(newReview)  // so that it become refernce for listing ,embedded ralatin
 await newReview.save();
 await listing.save();
+
 res.redirect(`/listings/${listing._id}`);
-})
+}) )
 
 
 // edit route
