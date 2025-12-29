@@ -1,19 +1,18 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const Listing = require("./models/listing.js")  // listing schema
-const Review = require("./models/review.js") // reviw schema
+// const Listing = require("./models/listing.js")  // listing schema
+// const Review = require("./models/review.js") // reviw schema
 const path = require("path");
 require("dotenv").config(); //env
 const methodOverride = require("method-override");//acessing method override
 const ejsmate = require("ejs-mate"); // ejs mate rquired
 const wrapAsync = require("./utils/wrapAsyn.js")  //for wrapasyn for middleware it aotomatically catches the error and passes it to the the middleware
 const ExpressError = require("./utils/ExpressError.js") // for custom express error
-const { listingSchema } = require("./schema");  // server joi schema
-const { reviewSchema } = require("./schema"); // review joi required for server side validation
+// const { listingSchema } = require("./schema");  // server joi schema
+// const { reviewSchema } = require("./schema"); // review joi required for server side validation
 const listings = require("./routes/listing.js"); // listing routes
 const reviews = require("./routes/review.js"); // reviw routes
-
 
 
 app.set("views",path.join(__dirname,"views"));
