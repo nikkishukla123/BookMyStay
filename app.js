@@ -11,6 +11,10 @@ const wrapAsync = require("./utils/wrapAsyn.js")  //for wrapasyn for middleware 
 const ExpressError = require("./utils/ExpressError.js") // for custom express error
 const { listingSchema } = require("./schema");  // server joi schema
 const { reviewSchema } = require("./schema"); // review joi required for server side validation
+const listings = require("./routes/listing.js"); // listing routes
+const reviews = require("./routes/review.js"); // reviw routes
+
+
 
 app.set("views",path.join(__dirname,"views"));
 app.set("view engine","ejs")
@@ -44,107 +48,17 @@ async function main() {
 //      console.log("response saved")
 // });
 
-// validate listing
-const validateListing = (req,res,next)=> {  // making it as a middleware to handle server error
-  // jab kisi rout ke upar call jaeyga pehle validate listing then bki ka async ka kaam
-  let {error} = listingSchema.validate(req.body);
-  console.log(error);
-  if (error) {
-    const msg = error.details.map(el => el.message).join(",");
-    throw new ExpressError(400, msg);
-  } else {
-    next()
-  }
-}
-
-// validate review 
-const validateReview = (req,res,next) => {
-  let {error} = reviewSchema.validate(req.body); // html ke form mein review[comment] aise hai
-  console.log(error);
-  if (error) {
-    const msg = error.details.map(el => el.message).join(",");
-    throw new ExpressError(400, msg);
-  } else {
-    next()
-  }
-}
-
-
-// create: listing all files 
-app.get("/listings",wrapAsync(async (req,res) => {     //Express route handlers always receive (req, res) in this order.
-    let lists =  await Listing.find();
-    res.render("listings/index.ejs",{lists});   //Express renders views relative to views/, including subfolders.
-}))
-
-// new route: add new listing
-app.get("/listings/new", (req,res) => {
- res.render("listings/form.ejs")
-})
-
-// CREATE ROUTE :MAKE NEW LIST BY SUBMITTING FORM BY POST REQUEST BUT FIRST GET FROM
-app.post("/listings",validateListing,wrapAsync(async (req,res) => {
-  // let {title,description,image,price,country,location} = req.body;
-  const newlisting = new Listing(req.body.listing);
-  // taking as for name ="listing[title]" is written tho vha sa direct data le lega
-  await newlisting.save();  // save hone ke baad redirect kardo
-  res.redirect("/listings");
-}) )
 
 
 
-//show route: read operation: get list show in deatail by id
-app.get("/listings/:id", wrapAsync(async (req,res) => {     //Express route handlers always receive (req, res) in this order.
-  let {id} = req.params;
-  const listing = await Listing.findById(id).populate("reviews");
-  res.render("listings/show.ejs",{listing}); 
-}) )
 
-//Reviews
-// post route
-app.post("/listings/:id/review",validateReview,wrapAsync(async(req,res) =>{
-let listing = await Listing.findById(req.params.id)  // id find karkar data  listing mein dal do
-const newReview = new Review(req.body.review); // taking as for name ="listing[title]" is written tho vha sa direct data le lega from html form
-
-listing.reviews.push(newReview)  // so that it become refernce for listing ,embedded ralatin
-await newReview.save();
-await listing.save();
-
-res.redirect(`/listings/${listing._id}`);
-}) )
-
-// REVIEWS:DELETE ROUTE
-app.delete("/listings/:id/review/:reviewId",wrapAsync(async(req,res) =>{
-  let {id,reviewId} = req.params; // taking both review and listing id as rview must be deleted in listings also
-await Listing.findByIdAndUpdate(id, { //uss review ko pull matlab delete karo jiska id listing id sa mathch hota haisa match karta hai
-  $pull: { reviews: new mongoose.Types.ObjectId(reviewId) } //So we convert string → ObjectId
-});  
-await Review.findByIdAndDelete(reviewId); // then delete that review
-
-res.redirect(`/listings/${id}`); // redirectin to show page again
-}))
+app.use("/listings",listings); // from this line we get entire listing route
+app.use("/listings/:id/review",reviews)
 
 
-// edit route
-app.get("/listings/:id/edit",wrapAsync(async (req,res) => {
-  let {id} = req.params;
-  const listing = await Listing.findById(id);
-  res.render("listings/edit.ejs",{listing}); 
-  
-} ) )
 
-app.put("/listings/:id",validateListing,wrapAsync(async (req,res) => {
-  let {id} = req.params;
-  await Listing.findByIdAndUpdate(id,{...req.body.listing},  { runValidators: true, new: true });  // usi list ko update kar rahe hai n isliye no const ,let vaigera
-  console.log(Listing);
-  res.redirect(`/listings/${id}`);
-}))
-// DELETE ROUTE
-app.delete("/listings/:id" ,wrapAsync(async(req,res) =>{
-  let {id} = req.params;
-  let deletedlisting = await Listing.findByIdAndDelete(id)
-  console.log("deleted sucessfully",deletedlisting)
-  res.redirect("/listings")
-}))
+
+
 
 // middleware
 app.use((req, res, next) => {   //  for handling custom express error
