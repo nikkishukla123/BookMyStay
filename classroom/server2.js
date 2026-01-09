@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const session = require("express-session"); // useing expression to create session for stateless http
+const session = require("express-session"); // using expression to create session for stateless http
 const flash = require("connect-flash");
 app.use(flash()); // flash middleware
 const path = require("path")
@@ -50,3 +50,5 @@ app.get("/test", (req,res) => {
    app.listen("8080", (req, res) => {
     console.log("server is running on 8080");
   });
+
+  

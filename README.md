@@ -111,3 +111,4 @@ Majorproject/
 - The application runs on port 8080 by default.
 - MongoDB connection is required for full functionality.
 - Static files (CSS, JS) can be added to a `public` directory and served via Express static middleware
+// 84
