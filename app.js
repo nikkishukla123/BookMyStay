@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 // const Listing = require("./models/listing.js")  // listing schema
 // const Review = require("./models/review.js") // reviw schema
+const port = process.env.PORT || 8080;
 const path = require("path");
 require("dotenv").config(); //env
 const methodOverride = require("method-override");//acessing method override
@@ -75,5 +76,5 @@ app.use((err,req,res,next) => {  // this is error handling middlewar // for form
 
 
 app.listen("8080", (req, res) => {
-  console.log("server is running on 8080");
+  console.log(`Server running on port ${port}`);
 });
