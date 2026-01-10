@@ -50,7 +50,9 @@ async function main() {
 
 
 
-
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
 
 app.use("/listings",listings); // from this line we get entire listing route
 app.use("/listings/:id/review",reviews)
@@ -73,6 +75,7 @@ app.use((err,req,res,next) => {  // this is error handling middlewar // for form
        //  next(err)
        res.status(status).render("listings/error.ejs", { message });
 })
+
 
 
 app.listen("8080", (req, res) => {
